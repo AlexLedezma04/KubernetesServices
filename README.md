@@ -36,7 +36,7 @@ El proyecto consta de tres componentes principales:
 
 ## Requisitos Previos
 
-Antes de comenzar, asegúrate de tener instaladas las siguientes herramientas en tu sistema Debian:
+Antes de comenzar, asegúrate de tener instaladas las siguientes herramientas (Esto es una guía para usuarios que usen un sistema operativo Linux Debian o derivados.)
 
 ### 1. Instalar Docker
 
@@ -260,7 +260,3 @@ kubectl run -it --rm debug --image=busybox --restart=Never -- sh
 nslookup api-service
 nslookup mariadb-service
 ```
-
-## Licencia
-
-Este proyecto es una práctica educativa sin licencia específica.
