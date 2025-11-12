@@ -1,0 +1,56 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb-local
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: productos
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./api
+    container_name: api-local
+    environment:
+      DB_HOST: mariadb
+      DB_USER: root
+      DB_PASS: password
+      DB_NAME: productos
+    ports:
+      - "5000:5000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    container_name: frontend-local
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+volumes:
+  mariadb-data:
+
+networks:
+  app-network:
+    driver: bridge
